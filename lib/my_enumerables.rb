@@ -1,60 +1,48 @@
+# frozen_string_literal: true
+
+# re-implementation of the standard module
 module Enumerable
   def my_each_with_index(&block)
-    for index in (0...self.length)
-      block.call(self[index], index)
-    end
+    (0...length).each { |index| block.call(self[index], index) }
     self
   end
 
   def my_select(&block)
     result = []
-    for x in self
-      result << x if block.call(x)
-    end
+    each { |x| result << x if block.call(x) }
     result
   end
 
   def my_all?(&block)
-    for x in self
-      return false unless block.call(x)
-    end
+    each { |x| return false unless block.call(x) }
     true
   end
 
   def my_any?(&block)
-    for x in self
-      return true if block.call(x)
-    end
+    each { |x| return true if block.call(x) }
     false
   end
 
   def my_none?(&block)
-    not my_any?(&block)
+    !my_any?(&block)
   end
 
   def my_count(&block)
-    if block.nil?
-      return self.length
-    end
+    return length if block.nil?
+
     result = 0
-    for x in self
-      result += 1 if block.call(x)
-    end
+    each { |x| result += 1 if block.call(x) }
     result
   end
 
   def my_map(&block)
     result = []
-    for x in self
-      result << block.call(x)
-    end
+    each { |x| result << block.call(x) }
     result
   end
 
-  def my_inject(acc=0, &block)
-    for x in self
-      acc = block.call(acc, x)
-    end
+  def my_inject(acc = 0, &block)
+    each { |x| acc = block.call(acc, x) }
     acc
   end
 end
@@ -65,10 +53,7 @@ end
 # to this method
 class Array
   def my_each(&block)
-    for x in self
-      block.call(x)
-    end
+    each { |x| block.call(x) }
     self
   end
 end
-
